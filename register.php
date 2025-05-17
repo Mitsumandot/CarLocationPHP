@@ -1,5 +1,7 @@
 <?php 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/models.php';
+$user = new User($db);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $nom = $_POST["nom"] ?? '';
@@ -7,25 +9,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $email = $_POST["email"] ?? '';
     $password = $_POST["password"] ?? '';
     
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
     
-    $passwordhash = password_hash($password, PASSWORD_DEFAULT);
-    
-    $sql = "INSERT INTO utilisateur (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
-    
-    $request = $db->prepare($sql);
-    
-    try {
-        $request->execute([$nom, $prenom, $email, $passwordhash]);
-        echo "Inscription réussite !";
+    if($user->checkMail($email)){
+        echo "This email is already used.";
     }
-    catch(PDOException $e){
-        if($e->getCode() == 2300){
-            echo "Ce nom d'utilisateur existe déjà !";
-        }
-        else {
-            echo "Erreur:".$e->getMessage();
-        }
+    elseif($user->createUser($nom, $prenom, $email, $passwordHash)){
+        echo "User created !";
     }
+    else {
+        echo "Error during inscription, please try again";
+    }
+
 
 }
 

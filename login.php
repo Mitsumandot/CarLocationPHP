@@ -1,32 +1,15 @@
 <?php
+header("Location: home.php");
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/models.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-$email = $_POST["email"];
-$password = $_POST["password"];
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $user = new User($db);
 
-
-$sql = "SELECT id, nom, prenom, mot_de_passe FROM utilisateur WHERE email = ?";
-$request = $db->prepare($sql);
-$request->execute([$email]);
-$user = $request->fetch(PDO::FETCH_ASSOC);
-
-if($user) {
-    if(password_verify($password, $user["mot_de_passe"])){
-        echo "Utilisateur connecté !";
-        session_start();
-        $_SESSION["user_id"] = $user["id"];
-        $_SESSION["nom"] = $user["nom"];
-        $_SESSION["prenom"] = $user["prenom"];
-        $_SESSION["mot_de_passe"] = $email;
-        echo "Bonjour ".$_SESSION["nom"];
-    }
-    else {
-        echo "Mot de passe incorrect.";
-    }
-}
-else{
-    echo "Email non trouvable";
-}
+    $user->login($email, $password);
+    exit();
+    
 
 }
 
