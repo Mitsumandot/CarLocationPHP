@@ -57,6 +57,36 @@ class User {
     }
 }
 
+class Voiture {
+    private $pdo;
+
+    function __construct($db){
+        $this->pdo = $db;
+    }
+
+    public function plaque($plaque){
+        $db = $this->pdo;
+        $sql = "SELECT COUNT(*) FROM voiture WHERE plaque = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$plaque]);
+        return $request->fetchColumn() > 0;
+
+    }
+
+    public function addCar($marque, $modele, $annee, $plaque, $prix){
+        $db = $this->pdo;
+        $sql = "INSERT INTO voiture (marque, modèle, annee, plaque, prix_jour) VALUES (?, ?, ?, ?, ?)";
+        $request = $db->prepare($sql);
+        try{
+            $request->execute([$marque, $modele, $annee, $plaque, $prix]);
+            echo "Voiture ajoutée";
+        }
+        catch(PDOException $e){
+            echo "Erreur".$e->getMessage();
+        }
+    }
+}
+
 
 
 
