@@ -1,15 +1,19 @@
 <?php
-header("Location: home.php");
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/models.php';
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST["email"];
     $password = $_POST["password"];
     $user = new User($db);
 
     $user->login($email, $password);
-    exit();
-    
+    if (isset($_POST["email"])) {
+        $_POST["email"] = NULL;
+        $_POST["password"] = NULL;
+        header("Location: home.php");
+        exit();
+    }
+
 
 }
 
@@ -19,11 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <form Method="post">
         Email :<input type="email" name="email"><br>
@@ -31,4 +37,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         <input type="submit" value="login">
     </form>
 </body>
+
 </html>

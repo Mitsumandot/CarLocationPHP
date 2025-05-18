@@ -16,9 +16,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $plaque, $prix)){
         echo "Car added! ";
     }
-    else{
-        echo "Erreur durant l'ajout de la voiture :(";
-    }
 }
 
 
