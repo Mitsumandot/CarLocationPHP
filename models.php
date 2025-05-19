@@ -160,7 +160,13 @@ class Voiture
             echo "Voiture mis à jour";
         }
         catch(PDOException $e){
-            echo "Erreur : " . $e->getMessage();
+            $plaque = $e->errorInfo[1];
+            if($plaque == 1062){
+                echo "Une autre voiture a déjà cette plaque";
+            }
+            else{
+                echo "Erreur : " . $e->getMessage();
+            }
         }
         
     }
@@ -249,6 +255,29 @@ class Client
             return "(Client supprimée)";
         }
     }
+
+    public function updateClient($nom, $prenom, $telephone, $cin, $id){
+        $db =$this->pdo;
+        $sql = "UPDATE client 
+        SET nom = ?, prenom = ?, telephone = ?, cin = ?
+        WHERE id = ?";
+        $request = $db->prepare($sql);
+        try{
+            $request->execute([$nom, $prenom, $telephone, $cin, $id]);
+            echo "Client mis à jour";
+        }
+        catch(PDOException $e){
+            $cin = $e->errorInfo[1];
+            if($cin == 1062){
+                echo "Un autre utilisateur a déjà ce CIN";
+            }
+            else{
+                echo "Erreur : " . $e->getMessage();
+            }
+        }
+        
+    }
+
 
 }
 
