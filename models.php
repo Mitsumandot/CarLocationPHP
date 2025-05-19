@@ -119,7 +119,7 @@ class Voiture
 
     public function deleteCar($id)
     {
-        if($this->checkFuturLocation($id)){
+        if ($this->checkFuturLocation($id)) {
             echo "This car has futur locations, you cant delete it !";
             return;
         }
@@ -130,13 +130,7 @@ class Voiture
             $request->execute([$id]);
             echo "La voiture a bien été supprimé";
         } catch (PDOException $e) {
-            $sqlState = $e->getCode();
-            $driverCode = $e->errorInfo[1] ?? null;
-            if ($sqlState == 23000 && $driverCode == 1451) {
-                echo "Tu ne peux pas supprimer une voiture qui a des locations !";
-            } else {
-                echo "Erreur:" . $e->getMessage();
-            }
+            echo "Erreur:" . $e->getMessage();
         }
 
     }
@@ -176,13 +170,42 @@ class Client
     public function getClients()
     {
         $db = $this->pdo;
-        $sql = "SELECT prenom, nom, id FROM client";
+        $sql = "SELECT prenom, nom, id, telephone, cin FROM client";
         $request = $db->prepare($sql);
         $request->execute();
         $clients = $request->fetchAll(PDO::FETCH_ASSOC);
         return $clients;
 
     }
+
+    public function checkFuturLocation($id)
+    {
+        $db = $this->pdo;
+        $sql = "SELECT COUNT(*) FROM location WHERE client_id = ? AND date_fin > CURRENT_DATE()";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+        return $request->fetchColumn() > 0;
+
+    }
+
+    public function deleteClient($id)
+    {
+        if ($this->checkFuturLocation($id)) {
+            echo "Ce client a de futur locations, tu ne peux pas le supprimer !";
+            return;
+        }
+        try {
+            $db = $this->pdo;
+            $sql = "DELETE FROM client WHERE id = ?";
+            $request = $db->prepare($sql);
+            $request->execute([$id]);
+            echo "le client a bien été supprimé";
+        } catch (PDOException $e) {
+            echo "Erreur: " . $e->getMessage();
+        }
+
+    }
+
 }
 
 class Location
