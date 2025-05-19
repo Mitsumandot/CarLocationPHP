@@ -96,6 +96,15 @@ class Voiture
             echo "Erreur" . $e->getMessage();
         }
     }
+
+    public function getCars(){
+        $db = $this->pdo;
+        $sql = "SELECT marque, modèle, id FROM voiture";
+        $request = $db->prepare($sql);
+        $request->execute();
+        $cars = $request->fetchAll(PDO::FETCH_ASSOC);
+        return $cars;
+    }
 }
 
 class Client
@@ -127,6 +136,87 @@ class Client
         } catch (PDOException $e) {
             echo "Erreur" . $e->getMessage();
         }
+    }
+
+    public function getClients(){
+        $db = $this->pdo;
+        $sql = "SELECT prenom, nom, id FROM client";
+        $request = $db->prepare($sql);
+        $request->execute();
+        $clients = $request->fetchAll(PDO::FETCH_ASSOC);
+        return $clients;
+
+    }
+}
+
+class Location {
+    private $pdo;
+
+    function __construct($db){
+        $this->pdo = $db;
+    }
+
+
+    public function client($id){
+        $db = $this->pdo;
+
+        $sql = "SELECT COUNT(*) FROM location WHERE client_id = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+
+        return $request->fetchColumn() > 0;
+    }
+    public function car($id){
+        $db = $this->pdo;
+
+        $sql = "SELECT COUNT(*) FROM location WHERE voiture_id = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+
+
+        return $request->fetchColumn() > 0;
+    }
+
+    public function checkClientDate($id, $dateDebut, $dateFin){
+        $sql = "SELECT COUNT(*) FROM location WHERE client_id = ? 
+        AND NOT ( date_fin <= ? OR date_debut >= ?)";
+        $db = $this->pdo;
+        $request = $db->prepare($sql);
+        $request->execute([$id, $dateDebut, $dateFin]);
+        return $request->fetchColumn() > 0;
+
+
+    }
+
+    public function checkCarDate($id, $dateDebut, $dateFin){
+        $sql = "SELECT COUNT(*) FROM location WHERE voiture_id = ? 
+        AND NOT ( date_fin <= ? OR date_debut >= ?)";
+        $db = $this->pdo;
+        $request = $db->prepare($sql);
+        $request->execute([$id, $dateDebut, $dateFin]);
+        return $request->fetchColumn() > 0;
+        
+    }
+
+    public function addLocation($voiture_id, $client_id, $dateDebut, $dateFin){
+        $db = $this->pdo;
+        $sql = "INSERT INTO location (voiture_id, client_id, date_debut, date_fin) VALUES (?, ?, ?, ?)";
+        $request = $db->prepare($sql);
+        if($this->car($voiture_id)){
+            if($this->checkCarDate($voiture_id, $dateDebut, $dateFin)){
+                echo "This car is already rented during this date !";
+                return;
+            }
+        }
+        try{
+            $request->execute([$voiture_id, $client_id, $dateDebut, $dateFin]);
+            echo "Location added to the data base";
+        }
+        catch(PDOException $e){
+            echo "Erreur".$e->getMessage();
+        }
+        
+        
     }
 }
 
