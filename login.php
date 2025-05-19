@@ -1,6 +1,13 @@
 <?php
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/models.php';
+session_start();
+if(isset($_SESSION["nom"])){
+    header("Location: home.php");
+    echo "Hello";
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST["email"];
     $password = $_POST["password"];

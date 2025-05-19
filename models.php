@@ -97,13 +97,48 @@ class Voiture
         }
     }
 
-    public function getCars(){
+    public function getCars()
+    {
         $db = $this->pdo;
-        $sql = "SELECT marque, modèle, id FROM voiture";
+        $sql = "SELECT marque, modèle, id, annee, plaque, prix_jour FROM voiture";
         $request = $db->prepare($sql);
         $request->execute();
         $cars = $request->fetchAll(PDO::FETCH_ASSOC);
         return $cars;
+    }
+
+    public function checkFuturLocation($id)
+    {
+        $db = $this->pdo;
+        $sql = "SELECT COUNT(*) FROM location WHERE voiture_id = ? AND date_fin > CURRENT_DATE()";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+        return $request->fetchColumn() > 0;
+
+    }
+
+    public function deleteCar($id)
+    {
+        if($this->checkFuturLocation($id)){
+            echo "This car has futur locations, you cant delete it !";
+            return;
+        }
+        try {
+            $db = $this->pdo;
+            $sql = "DELETE FROM voiture WHERE id = ?";
+            $request = $db->prepare($sql);
+            $request->execute([$id]);
+            echo "La voiture a bien été supprimé";
+        } catch (PDOException $e) {
+            $sqlState = $e->getCode();
+            $driverCode = $e->errorInfo[1] ?? null;
+            if ($sqlState == 23000 && $driverCode == 1451) {
+                echo "Tu ne peux pas supprimer une voiture qui a des locations !";
+            } else {
+                echo "Erreur:" . $e->getMessage();
+            }
+        }
+
     }
 }
 
@@ -138,7 +173,8 @@ class Client
         }
     }
 
-    public function getClients(){
+    public function getClients()
+    {
         $db = $this->pdo;
         $sql = "SELECT prenom, nom, id FROM client";
         $request = $db->prepare($sql);
@@ -149,15 +185,18 @@ class Client
     }
 }
 
-class Location {
+class Location
+{
     private $pdo;
 
-    function __construct($db){
+    function __construct($db)
+    {
         $this->pdo = $db;
     }
 
 
-    public function client($id){
+    public function client($id)
+    {
         $db = $this->pdo;
 
         $sql = "SELECT COUNT(*) FROM location WHERE client_id = ?";
@@ -166,7 +205,8 @@ class Location {
 
         return $request->fetchColumn() > 0;
     }
-    public function car($id){
+    public function car($id)
+    {
         $db = $this->pdo;
 
         $sql = "SELECT COUNT(*) FROM location WHERE voiture_id = ?";
@@ -177,7 +217,8 @@ class Location {
         return $request->fetchColumn() > 0;
     }
 
-    public function checkClientDate($id, $dateDebut, $dateFin){
+    public function checkClientDate($id, $dateDebut, $dateFin)
+    {
         $sql = "SELECT COUNT(*) FROM location WHERE client_id = ? 
         AND NOT ( date_fin <= ? OR date_debut >= ?)";
         $db = $this->pdo;
@@ -188,35 +229,36 @@ class Location {
 
     }
 
-    public function checkCarDate($id, $dateDebut, $dateFin){
+    public function checkCarDate($id, $dateDebut, $dateFin)
+    {
         $sql = "SELECT COUNT(*) FROM location WHERE voiture_id = ? 
         AND NOT ( date_fin <= ? OR date_debut >= ?)";
         $db = $this->pdo;
         $request = $db->prepare($sql);
         $request->execute([$id, $dateDebut, $dateFin]);
         return $request->fetchColumn() > 0;
-        
+
     }
 
-    public function addLocation($voiture_id, $client_id, $dateDebut, $dateFin){
+    public function addLocation($voiture_id, $client_id, $dateDebut, $dateFin)
+    {
         $db = $this->pdo;
         $sql = "INSERT INTO location (voiture_id, client_id, date_debut, date_fin) VALUES (?, ?, ?, ?)";
         $request = $db->prepare($sql);
-        if($this->car($voiture_id)){
-            if($this->checkCarDate($voiture_id, $dateDebut, $dateFin)){
+        if ($this->car($voiture_id)) {
+            if ($this->checkCarDate($voiture_id, $dateDebut, $dateFin)) {
                 echo "This car is already rented during this date !";
                 return;
             }
         }
-        try{
+        try {
             $request->execute([$voiture_id, $client_id, $dateDebut, $dateFin]);
             echo "Location added to the data base";
+        } catch (PDOException $e) {
+            echo "Erreur" . $e->getMessage();
         }
-        catch(PDOException $e){
-            echo "Erreur".$e->getMessage();
-        }
-        
-        
+
+
     }
 }
 

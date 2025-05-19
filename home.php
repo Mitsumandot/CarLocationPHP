@@ -16,6 +16,9 @@ if(isset($_POST["action"])){
 }
 echo "Bonjour ".$_SESSION["nom"]." ".$_SESSION["prenom"];
 
+if(isset($_POST["read"])){
+    header("Location: read/". $_POST["read"] . ".php");
+}
 
 
 ?>
@@ -34,6 +37,15 @@ echo "Bonjour ".$_SESSION["nom"]." ".$_SESSION["prenom"];
             <option value="addCar">Ajouter voiture</option>
             <option value="addRental">Ajouter location</option>
             <option value="addClient">Ajouter client</option>
+        </select>
+        <input type="submit" value="choisir">
+    </form>
+    <form Method="post">
+        Choisir quoi afficher:
+        <select name="read">
+            <option value="readCar">Afficher les voitures</option>
+            <option value="readClient">Afficher les clients</option>
+            <option value="readRental">Afficher les locations</option>
         </select>
         <input type="submit" value="choisir">
     </form>
