@@ -148,6 +148,22 @@ class Voiture
             return "(Voiture supprimée)";
         }
     }
+
+    public function updateCar($marque, $modele, $annee, $plaque, $prixJour, $id){
+        $db =$this->pdo;
+        $sql = "UPDATE voiture 
+        SET marque = ?, modèle = ?, annee = ?, plaque = ?, prix_jour = ?
+        WHERE id = ?";
+        $request = $db->prepare($sql);
+        try{
+            $request->execute([$marque, $modele, $annee, $plaque, $prixJour, $id]);
+            echo "Voiture mis à jour";
+        }
+        catch(PDOException $e){
+            echo "Erreur : " . $e->getMessage();
+        }
+        
+    }
 }
 
 class Client
@@ -357,9 +373,9 @@ class Location
         $prixJour = $voiture["prix_jour"];
         return $days * $prixJour . " €";
 
-
-
     }
+
+    
 }
 
 
