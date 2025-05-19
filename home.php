@@ -10,8 +10,8 @@ if(!isset($_SESSION["nom"])){
     header("Location: login.php");
     exit();
 }
-if(isset($_POST["action"])){
-    header("Location: actions/" . $_POST["action"] . ".php");
+if(isset($_POST["create"])){
+    header("Location: create/" . $_POST["create"] . ".php");
     exit();
 }
 echo "Bonjour ".$_SESSION["nom"]." ".$_SESSION["prenom"];
@@ -33,7 +33,7 @@ if(isset($_POST["read"])){
 <body>
     <form method="post">
         Choisir une acion parmi les actions suivantes :
-        <select name="action">
+        <select name="create">
             <option value="addCar">Ajouter voiture</option>
             <option value="addRental">Ajouter location</option>
             <option value="addClient">Ajouter client</option>

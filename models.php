@@ -134,6 +134,20 @@ class Voiture
         }
 
     }
+
+    public function getCarName($id)
+    {
+        $db = $this->pdo;
+        $sql = "SELECT marque, modèle, plaque FROM voiture WHERE id = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+        $car = $request->fetch(PDO::FETCH_ASSOC);
+        if ($car) {
+            return $car["marque"] . " " . $car["modèle"] . " " . $car["plaque"];
+        } else {
+            return "(Voiture supprimée)";
+        }
+    }
 }
 
 class Client
@@ -206,6 +220,20 @@ class Client
 
     }
 
+    public function getClientName($id)
+    {
+        $db = $this->pdo;
+        $sql = "SELECT nom, prenom FROM client WHERE id = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+        $client = $request->fetch(PDO::FETCH_ASSOC);
+        if ($client) {
+            return $client["nom"] . " " . $client["prenom"];
+        } else {
+            return "(Client supprimée)";
+        }
+    }
+
 }
 
 class Location
@@ -268,18 +296,67 @@ class Location
         $db = $this->pdo;
         $sql = "INSERT INTO location (voiture_id, client_id, date_debut, date_fin) VALUES (?, ?, ?, ?)";
         $request = $db->prepare($sql);
+        if($dateFin < $dateDebut){
+            echo "La date de départ ne peut être supérieur à la date de fin";
+        }
         if ($this->car($voiture_id)) {
             if ($this->checkCarDate($voiture_id, $dateDebut, $dateFin)) {
-                echo "This car is already rented during this date !";
+                echo "Cette voiture est déjà louée durant cette date";
                 return;
             }
         }
         try {
             $request->execute([$voiture_id, $client_id, $dateDebut, $dateFin]);
-            echo "Location added to the data base";
+            echo "Location ajoutée à la base de donné";
         } catch (PDOException $e) {
             echo "Erreur" . $e->getMessage();
         }
+
+
+    }
+
+    public function getLocations()
+    {
+        $db = $this->pdo;
+        $sql = "SELECT voiture_id, client_id, date_debut, date_fin, id FROM location";
+        $request = $db->prepare($sql);
+        $request->execute();
+        $locations = $request->fetchAll(PDO::FETCH_ASSOC);
+        return $locations;
+    }
+
+    public function deleteLocation($id)
+    {
+        try {
+            $db = $this->pdo;
+            $sql = "DELETE FROM location WHERE id = ?";
+            $request = $db->prepare($sql);
+            $request->execute([$id]);
+            echo "la location a bien été supprimée";
+        } catch (PDOException $e) {
+            echo "Erreur: " . $e->getMessage();
+        }
+
+    }
+
+    public function getTotalPrix($id){
+        $db = $this->pdo;
+        $sql = "SELECT date_debut, date_fin, voiture_id FROM location WHERE id = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$id]);
+        $location = $request->fetch(PDO::FETCH_ASSOC);
+        $dateDebut = new DateTime($location["date_debut"]);
+        $dateFin = new DateTime($location["date_fin"]);
+        $voiture_id = $location["voiture_id"];
+        $days = $dateDebut->diff($dateFin)->days;
+        $db = $this->pdo;
+        $sql = "SELECT prix_jour FROM voiture WHERE id = ?";
+        $request = $db->prepare($sql);
+        $request->execute([$voiture_id]);
+        $voiture = $request->fetch(PDO::FETCH_ASSOC);
+        $prixJour = $voiture["prix_jour"];
+        return $days * $prixJour . " €";
+
 
 
     }
