@@ -1,8 +1,15 @@
 <?php
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Client.php';
+
+
+session_start();
+if (!isset($_SESSION["nom"])) {
+    header("Location: login.php");
+    exit();
+}
+
 $client = new Client($db);
-$clients = $client->getClients();
 if (isset($_POST["Delete"])) {
     $id = $_POST["id"];
     $client->deleteClient($id);
@@ -18,6 +25,7 @@ if (isset($_POST["Save"])) {
     $client->updateClient($nom, $prenom, $telephone, $cin, $id);
 }
 
+$clients = $client->getClients();
 ?>
 
 

@@ -26,10 +26,11 @@ class Voiture
         $request = $db->prepare($sql);
         try {
             $request->execute([$marque, $modele, $annee, $plaque, $prix]);
-            echo "Voiture ajoutée";
+            return true;
         } catch (PDOException $e) {
             echo "Erreur" . $e->getMessage();
         }
+        return false;
     }
 
     public function getCars()

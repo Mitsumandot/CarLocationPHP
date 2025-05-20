@@ -1,13 +1,15 @@
 <?php
+
+session_start();
+if (!isset($_SESSION["nom"])) {
+    header("Location: login.php");
+    exit();
+}
+
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Client.php';
 require_once __DIR__ . '/../models/Location.php';
 require_once __DIR__ . '/../models/Voiture.php';
-$client = new Client($db);
-$clients = $client->getClients();
-
-$car = new Voiture($db);
-$voitures = $car->getCars();
 
 $location = new Location($db);
 
@@ -19,6 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $location->addLocation($voiture_id, $client_id, $date_debut, $date_fin);
 }
+
+$client = new Client($db);
+$clients = $client->getClients();
+
+$car = new Voiture($db);
+$voitures = $car->getCars();
+
 ?>
 
 

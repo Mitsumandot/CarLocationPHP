@@ -2,8 +2,14 @@
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Voiture.php';
 
+
+session_start();
+if (!isset($_SESSION["nom"])) {
+    header("Location: login.php");
+    exit();
+}
+
 $car = new Voiture($db);
-$cars = $car->getCars();
 if (isset($_POST["Delete"])) {
     $id = $_POST["id"];
     $car->deleteCar($id);
@@ -18,6 +24,7 @@ if (isset($_POST["Save"])) {
     $id = $_POST["id"];
     $car->updateCar($marque, $modele, $annee, $plaque, $prixJour, $id);
 }
+$cars = $car->getCars();
 ?>
 
 <!DOCTYPE html>

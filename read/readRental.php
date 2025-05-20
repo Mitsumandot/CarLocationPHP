@@ -3,11 +3,16 @@ require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Client.php';
 require_once __DIR__ . '/../models/Location.php';
 require_once __DIR__ . '/../models/Voiture.php';
+
+session_start();
+if (!isset($_SESSION["nom"])) {
+    header("Location: login.php");
+    exit();
+}
+
 $locationClass = new Location($db);
-$locations = $locationClass->getLocations();
 $car = new Voiture($db);
 $client = new Client($db);
-$clients = $client->getClients();
 $voitures = $car->getCars();
 if (isset($_POST["Delete"])) {
     $id = $_POST["id"];
@@ -30,6 +35,8 @@ if (isset($_POST["Save"])) {
     );
 }
 
+$locations = $locationClass->getLocations();
+$clients = $client->getClients();
 ?>
 
 
