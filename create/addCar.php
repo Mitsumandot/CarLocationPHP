@@ -3,40 +3,36 @@ require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Voiture.php';
 
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $marque = $_POST["marque"];
     $modele = $_POST["modele"];
     $annee = $_POST["annee"];
     $plaque = $_POST["plaque"];
     $prix = $_POST["prix"];
     $voiture = new Voiture($db);
-    if($voiture->plaque($plaque)){
+    if ($voiture->plaque($plaque)) {
         echo "We already have this car !";
-    }
-    elseif($voiture->addCar($marque, $modele, $annee, 
-    $plaque, $prix)){
+    } elseif ($voiture->addCar(
+        $marque,
+        $modele,
+        $annee,
+        $plaque,
+        $prix
+    )) {
         echo "Car added! ";
     }
 }
-
-
-
-
-
-
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <form method="post">
         Marque: <input type="text" name="marque"><br>
@@ -47,4 +43,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         <input type="submit" value="Ajouter"><br>
     </form>
 </body>
+
 </html>

@@ -30,8 +30,6 @@ if (isset($_POST["Save"])) {
     );
 }
 
-
-
 ?>
 
 
@@ -102,14 +100,14 @@ if (isset($_POST["Save"])) {
                     <?php } ?>
                 </select><br>
                 Date de début de location:
-                <input type="date" name="date_debut" value= <?php echo $location["date_debut"] ?>><br>
+                <input type="date" name="date_debut" value=<?php echo $location["date_debut"] ?>><br>
                 Date de fin de location:
                 <input type="date" name="date_fin" value=<?php echo $location["date_fin"] ?>><br>
                 <input type="hidden" name="id" value=<?php echo $location["id"] ?>>
                 <input type="submit" value="Save" name="Save">
             </form>
 
-            <?php unset($_POST["Update"]);
+        <?php unset($_POST["Update"]);
         } ?>
     <?php } ?>
 </body>

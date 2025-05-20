@@ -42,8 +42,6 @@ class Location
         $request = $db->prepare($sql);
         $request->execute([$id, $dateDebut, $dateFin]);
         return $request->fetchColumn() > 0;
-
-
     }
 
     public function checkCarDate($id, $dateDebut, $dateFin)
@@ -54,7 +52,6 @@ class Location
         $request = $db->prepare($sql);
         $request->execute([$id, $dateDebut, $dateFin]);
         return $request->fetchColumn() > 0;
-
     }
 
     public function addLocation($voiture_id, $client_id, $dateDebut, $dateFin)
@@ -62,7 +59,7 @@ class Location
         $db = $this->pdo;
         $sql = "INSERT INTO location (voiture_id, client_id, date_debut, date_fin) VALUES (?, ?, ?, ?)";
         $request = $db->prepare($sql);
-        if($dateFin < $dateDebut){
+        if ($dateFin < $dateDebut) {
             echo "La date de départ ne peut être supérieur à la date de fin";
         }
         if ($this->car($voiture_id)) {
@@ -77,8 +74,6 @@ class Location
         } catch (PDOException $e) {
             echo "Erreur" . $e->getMessage();
         }
-
-
     }
 
     public function getLocations()
@@ -102,10 +97,10 @@ class Location
         } catch (PDOException $e) {
             echo "Erreur: " . $e->getMessage();
         }
-
     }
 
-    public function getTotalPrix($id){
+    public function getTotalPrix($id)
+    {
         $db = $this->pdo;
         $sql = "SELECT date_debut, date_fin, voiture_id FROM location WHERE id = ?";
         $request = $db->prepare($sql);
@@ -122,10 +117,10 @@ class Location
         $voiture = $request->fetch(PDO::FETCH_ASSOC);
         $prixJour = $voiture["prix_jour"];
         return $days * $prixJour . " €";
-
     }
 
-    public function checkCarDateNotCurrent($car_id, $dateDebut, $dateFin, $id){
+    public function checkCarDateNotCurrent($car_id, $dateDebut, $dateFin, $id)
+    {
         $sql = "SELECT COUNT(*) FROM location WHERE voiture_id = ? 
         AND NOT ( date_fin <= ? OR date_debut >= ?) AND id != ?";
         $db = $this->pdo;
@@ -134,13 +129,14 @@ class Location
         return $request->fetchColumn() > 0;
     }
 
-    public function updateLocation($client_id, $voiture_id, $dateDebut, $dateFin, $id){
+    public function updateLocation($client_id, $voiture_id, $dateDebut, $dateFin, $id)
+    {
         $db = $this->pdo;
         $sql = "UPDATE location
         SET client_id = ?, voiture_id = ?, date_debut = ?, date_fin = ?
         WHERE id = ?";
         $request = $db->prepare($sql);
-        if($dateFin < $dateDebut){
+        if ($dateFin < $dateDebut) {
             echo "La date de départ ne peut être supérieur à la date de fin";
         }
         if ($this->car($voiture_id)) {
@@ -155,11 +151,5 @@ class Location
         } catch (PDOException $e) {
             echo "Erreur" . $e->getMessage();
         }
-
     }
-
-    
 }
-
-
-?>

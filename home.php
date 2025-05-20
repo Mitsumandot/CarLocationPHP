@@ -1,23 +1,23 @@
-<?php 
+<?php
 session_start();
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/models/User.php';
 $user = new User($db);
-if(isset($_POST['disconnect'])){
+if (isset($_POST['disconnect'])) {
     $user->disconnect();
 }
-if(!isset($_SESSION["nom"])){
+if (!isset($_SESSION["nom"])) {
     header("Location: login.php");
     exit();
 }
-if(isset($_POST["create"])){
+if (isset($_POST["create"])) {
     header("Location: create/" . $_POST["create"] . ".php");
     exit();
 }
-echo "Bonjour ".$_SESSION["nom"]." ".$_SESSION["prenom"];
+echo "Bonjour " . $_SESSION["nom"] . " " . $_SESSION["prenom"];
 
-if(isset($_POST["read"])){
-    header("Location: read/". $_POST["read"] . ".php");
+if (isset($_POST["read"])) {
+    header("Location: read/" . $_POST["read"] . ".php");
 }
 
 
@@ -25,11 +25,13 @@ if(isset($_POST["read"])){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <form method="post">
         Choisir une acion parmi les actions suivantes :
@@ -53,4 +55,5 @@ if(isset($_POST["read"])){
         <input type="submit" value="Se deconnecter" name="disconnect">
     </form>
 </body>
+
 </html>

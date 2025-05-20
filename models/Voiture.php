@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once __DIR__ . '/../db.php';
 
 class Voiture
@@ -17,7 +17,6 @@ class Voiture
         $request = $db->prepare($sql);
         $request->execute([$plaque]);
         return $request->fetchColumn() > 0;
-
     }
 
     public function addCar($marque, $modele, $annee, $plaque, $prix)
@@ -50,7 +49,6 @@ class Voiture
         $request = $db->prepare($sql);
         $request->execute([$id]);
         return $request->fetchColumn() > 0;
-
     }
 
     public function deleteCar($id)
@@ -68,7 +66,6 @@ class Voiture
         } catch (PDOException $e) {
             echo "Erreur:" . $e->getMessage();
         }
-
     }
 
     public function getCarName($id)
@@ -85,25 +82,23 @@ class Voiture
         }
     }
 
-    public function updateCar($marque, $modele, $annee, $plaque, $prixJour, $id){
-        $db =$this->pdo;
+    public function updateCar($marque, $modele, $annee, $plaque, $prixJour, $id)
+    {
+        $db = $this->pdo;
         $sql = "UPDATE voiture 
         SET marque = ?, modèle = ?, annee = ?, plaque = ?, prix_jour = ?
         WHERE id = ?";
         $request = $db->prepare($sql);
-        try{
+        try {
             $request->execute([$marque, $modele, $annee, $plaque, $prixJour, $id]);
             echo "Voiture mis à jour";
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             $plaque = $e->errorInfo[1];
-            if($plaque == 1062){
+            if ($plaque == 1062) {
                 echo "Une autre voiture a déjà cette plaque";
-            }
-            else{
+            } else {
                 echo "Erreur : " . $e->getMessage();
             }
         }
-        
     }
 }

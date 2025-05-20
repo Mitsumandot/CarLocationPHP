@@ -25,6 +25,7 @@ class User
         try {
             $request->execute([$nom, $prenom, $email, $mdp]);
             echo "Inscription réussite !";
+            return true;
         } catch (PDOException $e) {
             if ($e->getCode() == 2300) {
                 echo "Ce nom d'utilisateur existe déjà !";
@@ -32,6 +33,7 @@ class User
                 echo "Erreur:" . $e->getMessage();
             }
         }
+        return false;
     }
     public function login($email, $password)
     {

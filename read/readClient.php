@@ -9,7 +9,7 @@ if (isset($_POST["Delete"])) {
     unset($_POST["Delete"]);
 }
 
-if(isset($_POST["Save"])){
+if (isset($_POST["Save"])) {
     $nom = $_POST["nom"];
     $prenom = $_POST["prenom"];
     $telephone = $_POST["telephone"];
@@ -17,9 +17,6 @@ if(isset($_POST["Save"])){
     $id = $_POST["id"];
     $client->updateClient($nom, $prenom, $telephone, $cin, $id);
 }
-
-
-
 
 ?>
 
@@ -72,17 +69,17 @@ if(isset($_POST["Save"])){
             </div>
         <?php } else { ?>
             <form method="post">
-                Nom: <input type="text" name="nom" value="<?php echo $client["nom"]?>"><br>
-                Prenom: <input type="text" name="prenom" value="<?php echo $client["prenom"]?>"><br>
-                Téléphone: <input type="text" name="telephone" value="<?php echo $client["telephone"]?>"><br>
-                cin: <input type="text" name="cin" value="<?php echo $client["cin"]?>"><br>
+                Nom: <input type="text" name="nom" value="<?php echo $client["nom"] ?>"><br>
+                Prenom: <input type="text" name="prenom" value="<?php echo $client["prenom"] ?>"><br>
+                Téléphone: <input type="text" name="telephone" value="<?php echo $client["telephone"] ?>"><br>
+                cin: <input type="text" name="cin" value="<?php echo $client["cin"] ?>"><br>
                 <input type="hidden" name="id" value=<?php echo $client["id"] ?>>
                 <input type="submit" value="Save" name="Save"><br>
             </form>
 
 
-        <?php 
-        unset($_POST["Update"]);
+        <?php
+            unset($_POST["Update"]);
         } ?>
     <?php } ?>
 </body>

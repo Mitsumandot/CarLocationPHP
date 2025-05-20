@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Voiture.php';
+
 $car = new Voiture($db);
 $cars = $car->getCars();
 if (isset($_POST["Delete"])) {
@@ -8,7 +9,7 @@ if (isset($_POST["Delete"])) {
     $car->deleteCar($id);
     unset($_POST["Delete"]);
 }
-if(isset($_POST["Save"])){
+if (isset($_POST["Save"])) {
     $marque = $_POST["marque"];
     $modele = $_POST["modele"];
     $annee = $_POST["annee"];
@@ -16,13 +17,8 @@ if(isset($_POST["Save"])){
     $prixJour = $_POST["prix_jour"];
     $id = $_POST["id"];
     $car->updateCar($marque, $modele, $annee, $plaque, $prixJour, $id);
-
 }
-
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +67,7 @@ if(isset($_POST["Save"])){
                     </form>
                 </div>
             </div>
-        <?php } else{ ?>
+        <?php } else { ?>
             <div>
                 <form method="post">
                     Marque :<input type="text" name="marque" value="<?php echo $car["marque"] ?>"><br>
@@ -83,8 +79,8 @@ if(isset($_POST["Save"])){
                     <input type="submit" value="Save" name="Save">
                 </form>
             </div>
-        <?php 
-        unset($_POST["Update"]);
+        <?php
+            unset($_POST["Update"]);
         } ?>
 
     <?php } ?>

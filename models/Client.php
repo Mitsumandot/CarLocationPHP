@@ -41,7 +41,6 @@ class Client
         $request->execute();
         $clients = $request->fetchAll(PDO::FETCH_ASSOC);
         return $clients;
-
     }
 
     public function checkFuturLocation($id)
@@ -51,7 +50,6 @@ class Client
         $request = $db->prepare($sql);
         $request->execute([$id]);
         return $request->fetchColumn() > 0;
-
     }
 
     public function deleteClient($id)
@@ -69,7 +67,6 @@ class Client
         } catch (PDOException $e) {
             echo "Erreur: " . $e->getMessage();
         }
-
     }
 
     public function getClientName($id)
@@ -104,10 +101,5 @@ class Client
                 echo "Erreur : " . $e->getMessage();
             }
         }
-
     }
-
-
 }
-
-?>
