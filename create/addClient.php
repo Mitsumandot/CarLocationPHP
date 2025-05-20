@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../models.php';
+require_once __DIR__ . '/../models/Client.php';
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $nom = $_POST["nom"];
     $prenom = $_POST["prenom"];

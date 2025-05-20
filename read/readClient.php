@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../models.php';
+require_once __DIR__ . '/../models/Client.php';
 $client = new Client($db);
 $clients = $client->getClients();
 if (isset($_POST["Delete"])) {

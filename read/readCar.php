@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../models.php';
+require_once __DIR__ . '/../models/Voiture.php';
 $car = new Voiture($db);
 $cars = $car->getCars();
 if (isset($_POST["Delete"])) {

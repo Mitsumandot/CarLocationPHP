@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../models.php';
+require_once __DIR__ . '/../models/Client.php';
+require_once __DIR__ . '/../models/Location.php';
+require_once __DIR__ . '/../models/Voiture.php';
 $client = new Client($db);
 $clients = $client->getClients();
 

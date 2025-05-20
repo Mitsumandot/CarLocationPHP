@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../models.php';
+require_once __DIR__ . '/../models/Voiture.php';
+
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $marque = $_POST["marque"];

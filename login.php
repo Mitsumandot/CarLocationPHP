@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/models.php';
+require_once __DIR__ . '/models/User.php';
 session_start();
 if(isset($_SESSION["nom"])){
     header("Location: home.php");

@@ -1,6 +1,6 @@
 <?php 
 require_once __DIR__ . '/db.php';
-require_once __DIR__ . '/models.php';
+require_once __DIR__ . '/models/User.php';
 $user = new User($db);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
