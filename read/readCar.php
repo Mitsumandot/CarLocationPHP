@@ -48,6 +48,8 @@ if (isset($_POST["Save"])) {
 </head>
 
 <body>
+    <p><a href="../create/addCar.php">Ajouter une nouvelle voiture</a></p>
+
     <?php foreach ($cars as $car) { ?>
         <?php if (!isset($_POST[$car["id"]])) { ?>
             <div>

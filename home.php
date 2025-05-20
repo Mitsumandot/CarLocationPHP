@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/models/User.php';
+
 $user = new User($db);
 if (isset($_POST['disconnect'])) {
     $user->disconnect();
@@ -10,16 +11,6 @@ if (!isset($_SESSION["nom"])) {
     header("Location: login.php");
     exit();
 }
-if (isset($_POST["create"])) {
-    header("Location: create/" . $_POST["create"] . ".php");
-    exit();
-}
-echo "Bonjour " . $_SESSION["nom"] . " " . $_SESSION["prenom"];
-
-if (isset($_POST["read"])) {
-    header("Location: read/" . $_POST["read"] . ".php");
-}
-
 
 ?>
 
@@ -33,24 +24,15 @@ if (isset($_POST["read"])) {
 </head>
 
 <body>
-    <form method="post">
-        Choisir une acion parmi les actions suivantes :
-        <select name="create">
-            <option value="addCar">Ajouter voiture</option>
-            <option value="addRental">Ajouter location</option>
-            <option value="addClient">Ajouter client</option>
-        </select>
-        <input type="submit" value="choisir">
-    </form>
-    <form Method="post">
-        Choisir quoi afficher:
-        <select name="read">
-            <option value="readCar">Afficher les voitures</option>
-            <option value="readClient">Afficher les clients</option>
-            <option value="readRental">Afficher les locations</option>
-        </select>
-        <input type="submit" value="choisir">
-    </form>
+    <h2><?= "Bonjour " . $_SESSION["nom"] . " " . $_SESSION["prenom"] ?></h2>
+
+    <p>Que voulez-vous faire ?</p>
+    <ul>
+        <li><a href="read/readCar.php">Afficher les voitures</a></li>
+        <li><a href="read/readClient.php">Afficher les clients</a></li>
+        <li><a href="read/readRental.php">Afficher les locations</a></li>
+    </ul>
+
     <form method="post">
         <input type="submit" value="Se deconnecter" name="disconnect">
     </form>

@@ -49,6 +49,8 @@ if (isset($_POST["Save"])) {
 </head>
 
 <body>
+    <p><a href="../create/addClient.php">Ajouter un nouveau client</a></p>
+
     <?php foreach ($clients as $client) { ?>
         <?php if (!isset($_POST[$client["id"]])) { ?>
             <div>

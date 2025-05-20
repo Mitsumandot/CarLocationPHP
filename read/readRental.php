@@ -61,6 +61,8 @@ if (isset($_POST["Save"])) {
 </head>
 
 <body>
+    <p><a href="../create/addRental.php">Ajouter une nouvelle location</a></p>
+
     <?php foreach ($locations as $location) { ?>
         <?php if (!isset($_POST[$location["id"]])) { ?>
             <div>
