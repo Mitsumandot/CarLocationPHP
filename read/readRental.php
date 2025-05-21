@@ -52,6 +52,7 @@ $clients = $client->getClients();
             display: flex;
             flex-direction: column;
             gap: 20px;
+            font-family: sans-serif;
         }
 
         body>div {
@@ -64,10 +65,47 @@ $clients = $client->getClients();
             display: flex;
             gap: 5px;
         }
+
+        input[type="text"] {
+            padding: 3px 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="submit"] {
+            padding: 3px 8px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            margin: 0;
+        }
     </style>
+
+
+
 </head>
 
 <body>
+    <a href="../home.php">Back</a>
     <p><a href="../create/addRental.php">Ajouter une nouvelle location</a></p>
 
     <?php foreach ($locations as $location) { ?>
@@ -94,7 +132,8 @@ $clients = $client->getClients();
                 Voiture:
                 <select name="voiture">
                     <?php foreach ($voitures as $voiture) { ?>
-                        <option value=<?php echo $voiture["id"] ?> <?php if ($voiture['id'] == $location['voiture_id']) echo 'selected'; ?>>
+                        <option value=<?php echo $voiture["id"] ?>             <?php if ($voiture['id'] == $location['voiture_id'])
+                                            echo 'selected'; ?>>
                             <?php echo $voiture["marque"] . " " . $voiture["modèle"] . " " . $voiture["plaque"] ?>
                         </option>
 
@@ -103,7 +142,8 @@ $clients = $client->getClients();
                 Client:
                 <select name="Client">
                     <?php foreach ($clients as $clientForm) { ?>
-                        <option value=<?php echo $clientForm["id"] ?> <?php if ($clientForm['id'] == $location['client_id']) echo 'selected'; ?>>
+                        <option value=<?php echo $clientForm["id"] ?>             <?php if ($clientForm['id'] == $location['client_id'])
+                                            echo 'selected'; ?>>
                             <?php echo $clientForm["nom"] . " " . $clientForm["prenom"] ?>
                         </option>
                     <?php } ?>
@@ -116,7 +156,7 @@ $clients = $client->getClients();
                 <input type="submit" value="Save" name="Save">
             </form>
 
-        <?php unset($_POST["Update"]);
+            <?php unset($_POST["Update"]);
         } ?>
     <?php } ?>
 </body>

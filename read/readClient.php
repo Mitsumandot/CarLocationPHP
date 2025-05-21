@@ -2,14 +2,14 @@
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Client.php';
 
-
 session_start();
 if (!isset($_SESSION["nom"])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
 $client = new Client($db);
+
 if (isset($_POST["Delete"])) {
     $id = $_POST["id"];
     $client->deleteClient($id);
@@ -28,70 +28,115 @@ if (isset($_POST["Save"])) {
 $clients = $client->getClients();
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Clients</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
         }
 
-        body>div {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        a {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .client-card {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .client-card div {
+            margin: 4px 0;
         }
 
         .input {
             display: flex;
-            gap: 5px;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin: 3px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        form {
+            margin: 0;
         }
     </style>
 </head>
 
 <body>
-    <p><a href="../create/addClient.php">Ajouter un nouveau client</a></p>
+    <a href="../home.php">Back</a>
+
+    <a href="../create/addClient.php">+ Ajouter un nouveau client</a>
 
     <?php foreach ($clients as $client) { ?>
         <?php if (!isset($_POST[$client["id"]])) { ?>
-            <div>
-                <div>Nom: <?php echo $client["nom"] ?></div>
-                <div>Prénom: <?php echo $client["prenom"] ?></div>
-                <div>Téléphone: <?php echo $client["telephone"] ?></div>
-                <div>CIN: <?php echo $client["cin"] ?></div>
+            <div class="client-card">
+                <div><strong>Nom :</strong> <?= htmlspecialchars($client["nom"]) ?></div>
+                <div><strong>Prénom :</strong> <?= htmlspecialchars($client["prenom"]) ?></div>
+                <div><strong>Téléphone :</strong> <?= htmlspecialchars($client["telephone"]) ?></div>
+                <div><strong>CIN :</strong> <?= htmlspecialchars($client["cin"]) ?></div>
                 <div class="input">
                     <form method="post">
-                        <input type="hidden" name=<?php echo $client["id"] ?> value=<?php echo $client["id"] ?>>
-                        <input type="submit" value="Update" name="Update">
+                        <input type="hidden" name="<?= $client["id"] ?>" value="<?= $client["id"] ?>">
+                        <input type="submit" value="Modifier" name="Update">
                     </form>
                     <form method="post" onsubmit="return confirm('Êtes‑vous sûr de vouloir supprimer ce client ?');">
-                        <input type="hidden" name="id" value=<?php echo $client["id"] ?>>
-                        <input type="submit" value="Delete" name="Delete">
+                        <input type="hidden" name="id" value="<?= $client["id"] ?>">
+                        <input type="submit" value="Supprimer" name="Delete">
                     </form>
                 </div>
             </div>
         <?php } else { ?>
-            <form method="post">
-                Nom: <input type="text" name="nom" value="<?php echo $client["nom"] ?>"><br>
-                Prenom: <input type="text" name="prenom" value="<?php echo $client["prenom"] ?>"><br>
-                Téléphone: <input type="text" name="telephone" value="<?php echo $client["telephone"] ?>"><br>
-                cin: <input type="text" name="cin" value="<?php echo $client["cin"] ?>"><br>
-                <input type="hidden" name="id" value=<?php echo $client["id"] ?>>
-                <input type="submit" value="Save" name="Save"><br>
-            </form>
-
-
-        <?php
-            unset($_POST["Update"]);
+            <div class="client-card">
+                <form method="post">
+                    <input type="text" name="nom" value="<?= htmlspecialchars($client["nom"]) ?>" placeholder="Nom">
+                    <input type="text" name="prenom" value="<?= htmlspecialchars($client["prenom"]) ?>" placeholder="Prénom">
+                    <input type="text" name="telephone" value="<?= htmlspecialchars($client["telephone"]) ?>" placeholder="Téléphone">
+                    <input type="text" name="cin" value="<?= htmlspecialchars($client["cin"]) ?>" placeholder="CIN">
+                    <input type="hidden" name="id" value="<?= $client["id"] ?>">
+                    <input type="submit" value="Enregistrer" name="Save">
+                </form>
+            </div>
+        <?php unset($_POST["Update"]);
         } ?>
     <?php } ?>
+
 </body>
 
 </html>

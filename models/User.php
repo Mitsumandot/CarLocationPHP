@@ -24,7 +24,6 @@ class User
         $request = $db->prepare($sql);
         try {
             $request->execute([$nom, $prenom, $email, $mdp]);
-            echo "Inscription réussite !";
             return true;
         } catch (PDOException $e) {
             if ($e->getCode() == 2300) {

@@ -2,10 +2,9 @@
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../models/Voiture.php';
 
-
 session_start();
 if (!isset($_SESSION["nom"])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -28,70 +27,113 @@ $cars = $car->getCars();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Voitures</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
 
-        body>div {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        a {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .car-card {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .car-card div {
+            margin: 4px 0;
         }
 
         .input {
             display: flex;
-            gap: 5px;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin: 3px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        form {
+            margin: 0;
         }
     </style>
 </head>
 
 <body>
-    <p><a href="../create/addCar.php">Ajouter une nouvelle voiture</a></p>
+    <a href="../home.php">Back</a>
+    <a href="../create/addCar.php">+ Ajouter une nouvelle voiture</a>
 
     <?php foreach ($cars as $car) { ?>
         <?php if (!isset($_POST[$car["id"]])) { ?>
-            <div>
-                <div>Marque : <?php echo $car["marque"] ?></div>
-                <div>Modèle : <?php echo $car["modèle"] ?></div>
-                <div>Année : <?php echo $car["annee"] ?></div>
-                <div>Plaque : <?php echo $car["plaque"] ?></div>
-                <div>Prix par jour: <?php echo $car["prix_jour"] ?></div>
+            <div class="car-card">
+                <div><strong>Marque :</strong> <?= htmlspecialchars($car["marque"]) ?></div>
+                <div><strong>Modèle :</strong> <?= htmlspecialchars($car["modèle"]) ?></div>
+                <div><strong>Année :</strong> <?= htmlspecialchars($car["annee"]) ?></div>
+                <div><strong>Plaque :</strong> <?= htmlspecialchars($car["plaque"]) ?></div>
+                <div><strong>Prix par jour :</strong> <?= htmlspecialchars($car["prix_jour"]) ?>€</div>
                 <div class="input">
                     <form method="post">
-                        <input type="hidden" name=<?php echo $car["id"] ?> value=<?php echo $car["id"] ?>>
-                        <input type="submit" value="Update" name="Update">
+                        <input type="hidden" name="<?= $car["id"] ?>" value="<?= $car["id"] ?>">
+                        <input type="submit" value="Modifier" name="Update">
                     </form>
                     <form method="post" onsubmit="return confirm('Êtes‑vous sûr de vouloir supprimer cette voiture ?');">
-                        <input type="hidden" name="id" value=<?php echo $car["id"] ?>>
-                        <input type="submit" value="Delete" name="Delete">
+                        <input type="hidden" name="id" value="<?= $car["id"] ?>">
+                        <input type="submit" value="Supprimer" name="Delete">
                     </form>
                 </div>
             </div>
         <?php } else { ?>
-            <div>
+            <div class="car-card">
                 <form method="post">
-                    Marque :<input type="text" name="marque" value="<?php echo $car["marque"] ?>"><br>
-                    Modèle :<input type="text" name="modele" value="<?php echo $car["modèle"] ?>"><br>
-                    Année :<input type="text" name="annee" value="<?php echo $car["annee"] ?>"><br>
-                    Plaque :<input type="text" name="plaque" value="<?php echo $car["plaque"] ?>"><br>
-                    Prix par jour :<input type="text" name="prix_jour" value="<?php echo $car["prix_jour"] ?>"><br>
-                    <input type="hidden" name="id" value=<?php echo $car["id"] ?>>
-                    <input type="submit" value="Save" name="Save">
+                    <input type="text" name="marque" value="<?= htmlspecialchars($car["marque"]) ?>" placeholder="Marque">
+                    <input type="text" name="modele" value="<?= htmlspecialchars($car["modèle"]) ?>" placeholder="Modèle">
+                    <input type="text" name="annee" value="<?= htmlspecialchars($car["annee"]) ?>" placeholder="Année">
+                    <input type="text" name="plaque" value="<?= htmlspecialchars($car["plaque"]) ?>" placeholder="Plaque">
+                    <input type="text" name="prix_jour" value="<?= htmlspecialchars($car["prix_jour"]) ?>" placeholder="Prix/jour">
+                    <input type="hidden" name="id" value="<?= $car["id"] ?>">
+                    <input type="submit" value="Enregistrer" name="Save">
                 </form>
             </div>
-        <?php
-            unset($_POST["Update"]);
+        <?php unset($_POST["Update"]);
         } ?>
-
     <?php } ?>
 </body>
 

@@ -70,7 +70,7 @@ class Location
         }
         try {
             $request->execute([$voiture_id, $client_id, $dateDebut, $dateFin]);
-            echo "Location ajoutée à la base de donné";
+            return true;
         } catch (PDOException $e) {
             echo "Erreur" . $e->getMessage();
         }
